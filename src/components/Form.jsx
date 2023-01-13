@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import {useDropzone} from 'react-dropzone'
 
 
 const Form = () => {
     const [image, setImage] = useState([])
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({
+    const {getRootProps, getInputProps} = useDropzone({
         accept: "image/",
         onDrop: (acceptedFiles) => {
             setImage(
