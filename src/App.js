@@ -7,6 +7,7 @@ function App() {
   const [account, setAccount] = useState(false);
 
   async function signIn() {
+    e.preventDefault()
     const account = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
