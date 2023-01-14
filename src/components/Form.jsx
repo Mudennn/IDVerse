@@ -10,7 +10,7 @@ const Form = () => {
   // console.log("🚀 ~ file: Form.jsx:6 ~ Form ~ image", image)
 
   // Upload file to Pinata 
-  const [formParams, updateFormParams] = useState({ firstName: '', lastName: '', location:'', city:'', state:'', zip:'', sex:'', age:'', tel:'', email: '' })
+  const [formParams, updateFormParams] = useState({ firstName: '', lastName: '', location: '', city: '', state: '', zip: '', sex: '', age: '', tel: '', email: '' })
   const [fileURL, setFileURL] = useState(null)
   const ethers = require('ethers')
   const [message, updateMessage] = useState('')
