@@ -6,7 +6,7 @@ import Form from "./components/Form";
 function App() {
   const [account, setAccount] = useState(false);
 
-  async function signIn() {
+  async function signIn(e) {
     e.preventDefault()
     const account = await window.ethereum.request({
       method: "eth_requestAccounts",
