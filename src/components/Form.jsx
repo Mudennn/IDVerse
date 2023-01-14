@@ -77,7 +77,7 @@ const Form = () => {
 
         let contract = new ethers.Contract(Id.address, Id.abi, signer)
         
-        let transaction = await contract.createToken(metadataURL)
+        let transaction = await contract.createToken(metadataURL) // .createToken pun dari contract
         await transaction.wait()
 
         alert("Succesfully upload your Digital ID")
@@ -100,8 +100,8 @@ const Form = () => {
         </h3>
       </div>
       {/* First and Last name  */}
-      <div className="mt-4 flex gap-3 gap-y-5 text-left">
-        <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+      <div className="mt-4 flex gap-0 sm:gap-3 gap-y-5 text-left">
+        <div className="md:w-1/2 px-3 ">
           <label htmlFor="firstName" className="mb-1 font-semibold text-gray-500">
             First Name
           </label>
@@ -144,7 +144,7 @@ const Form = () => {
       </div>
       {/* City, State, Zip  */}
       <div className="text-left flex mt-3">
-        <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+        <div className="md:w-1/2 px-3 ">
           <label htmlFor="city" className="mb-1 font-semibold text-gray-500">
             City
           </label>
@@ -187,7 +187,7 @@ const Form = () => {
 
       {/* Gender, Age and Tel  */}
       <div className="text-left flex mt-3">
-        <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+        <div className="md:w-1/2 px-3 ">
           <label htmlFor="sex" className="mb-1 font-semibold text-gray-500">
             Sex
           </label>
@@ -231,7 +231,7 @@ const Form = () => {
       </div>
       {/* Email  */}
       <div className="text-left flex mt-3">
-        <div className="md:w-full px-3">
+        <div className="w-full px-3">
           <label htmlFor="email" className="mb-1 font-semibold text-gray-500">
             Email
           </label>
@@ -247,13 +247,13 @@ const Form = () => {
       </div>
 
       {/* Upload Image  */}
-      <div className="ml-3 mt-3 text-left">
+      <div className="ml-3 mr-3 mt-3 text-left">
         <label className="mb-1 font-semibold text-gray-500">
           Upload Your IC
         </label>
         <div
           {...getRootProps()}
-          className="bg-gray-100  p-12 cursor-pointer w-1/2 text-center "
+          className="bg-gray-100 p-12 cursor-pointer w-full sm:w-1/2 text-center"
         >
           <input {...getInputProps()} onChange={OnChangeFile} type={"file"} />
           <p>Drag 'n' drop some files here, or click to select files</p>

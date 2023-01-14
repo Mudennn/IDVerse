@@ -3,6 +3,7 @@ import "./App.css";
 import Issuer from "./components/Issuer";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/issuer" element={<Issuer />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>
     </div>
