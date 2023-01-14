@@ -9,14 +9,14 @@ const Form = () => {
   const [image, setImage] = useState([]);
   // console.log("🚀 ~ file: Form.jsx:6 ~ Form ~ image", image)
 
-  // Upload file to Pinata 
+  // State for Upload file to Pinata 
   const [formParams, updateFormParams] = useState({ firstName: '', lastName: '', location: '', city: '', state: '', zip: '', sex: '', age: '', tel: '', email: '' })
   const [fileURL, setFileURL] = useState(null)
   const ethers = require('ethers')
   const [message, updateMessage] = useState('')
   // const location = useLocation();
 
-  // To preview image
+  // To preview image - Dropzone plugin
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/",
     onDrop: (acceptedFiles) => {
@@ -30,7 +30,7 @@ const Form = () => {
     },
   });
 
-  // For upload image to pinata 
+  // Function for upload image to pinata 
   async function OnChangeFile(e) {
     var file = e.target.files[0]
 
@@ -253,7 +253,7 @@ const Form = () => {
         </label>
         <div
           {...getRootProps()}
-          className="bg-gray-200  p-12 cursor-pointer w-1/2 text-center"
+          className="bg-gray-100  p-12 cursor-pointer w-1/2 text-center "
         >
           <input {...getInputProps()} onChange={OnChangeFile} type={"file"} />
           <p>Drag 'n' drop some files here, or click to select files</p>
@@ -262,7 +262,7 @@ const Form = () => {
           {image.map((uploadFile, index) => {
             return (
               <>
-                <div key={index} className="mt-5 text-left">
+                <div key={index} className="mt-5 text-left ">
                   <p className="text-gray-500">Preview</p>
                   <img src={uploadFile.preview} alt={uploadFile.path} className="w-1/3" />
                   <p className="text-gray-500">{uploadFile.path}</p>
