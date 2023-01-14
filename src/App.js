@@ -1,50 +1,19 @@
-import { ethers } from "ethers";
-import { useState} from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Form from "./components/Form";
+import Issuer from "./components/Issuer";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
 
 function App() {
-  const [account, setAccount] = useState(false);
-
-  async function signIn(e) {
-    e.preventDefault()
-    const account = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    console.log("🚀 ~ file: App.js:13 ~ signIn ~ account", account)
-    setAccount(account[0]);
-  }
- 
   return (
     <div className="App w-full h-full">
-      <>
-        <header className="mb-2 px-4 shadow">
-          <div className="relative mx-auto flex max-w-screen-lg flex-col py-4 sm:flex-row sm:items-center sm:justify-between">
-            <a className="flex items-center text-2xl font-black" href="/">
-              IDVerse
-            </a>
-            <div className="peer-checked:block hidden pl-2 py-6 sm:block sm:py-0">
-              {account ? (
-                <button className="rounded-xl border-2 border-blue-600 bg-blue-600 px-6 py-2 font-medium text-white ">
-                  {account.substring(0,4) + '...' + account.substring(38)}
-                </button>
-              ) : (
-                <button
-                  onClick={signIn}
-                  className="rounded-xl border-2 border-blue-600 px-6 py-2 font-medium text-blue-600 hover:bg-blue-600 hover:text-white"
-                >
-                  Log In
-                </button>
-              )}
-              
-            </div>
-          </div>
-        </header>
-
-        {/* Digital Data Form  */}
-        
-        <Form />
-      </>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/issuer" element={<Issuer />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
