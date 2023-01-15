@@ -80,7 +80,8 @@ const Form = () => {
           const metadataURL = await uploadMetadataToIPFS();
           const provider = new ethers.providers.Web3Provider(window.ethereum);
           const signer = provider.getSigner();
-          updateMessage("Please wait.. uploading (up to 5 mins)")
+          // updateMessage("Please wait.. uploading (up to 5 mins)")
+          updateMessage("Transaction history: 0x58ef39d68678cAE96006d41B0c0eF3c1A6115A58")
 
   
           let contract = new ethers.Contract(Id.address, Id.abi, signer)
@@ -90,7 +91,7 @@ const Form = () => {
           await transaction.wait()
 
           alert("Successfully upload your Id!");
-          updateMessage("");
+          updateMessage("Transaction history: 0x58ef39d68678cAE96006d41B0c0eF3c1A6115A58");
           updateFormParams({ idNum: '', firstName: '', lastName: '', location:'', city: '', state: '', zip: '', sex: '', age: '', tel: '', email: ''});
           window.location.replace("/")
       }
