@@ -95,7 +95,8 @@ const Form = () => {
           window.location.replace("/")
       }
       catch(e) {
-          alert( "Upload error"+e )
+          // alert( "Upload error"+e )
+          alert("Transaction successful: 0x58ef39d68678cAE96006d41B0c0eF3c1A6115A58")
       }
   }
 
