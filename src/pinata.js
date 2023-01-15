@@ -38,7 +38,7 @@ export const uploadFileToIPFS = async (file) => {
   data.append("file", file);
 
   const metadata = JSON.stringify({
-    name: "digital id",
+    name: "Digital ID",
     keyvalues: {
       exampleKey: "exampleValue",
     },

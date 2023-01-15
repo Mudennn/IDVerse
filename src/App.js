@@ -9,7 +9,6 @@ function App() {
   return (
     <div className="App w-full h-full">
       <BrowserRouter>
-        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/issuer" element={<Issuer />} />

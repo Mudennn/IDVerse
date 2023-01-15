@@ -2,96 +2,109 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import {uploadFileToIPFS, uploadJSONToIPFS} from "../pinata"
 import Id from '../Id.json'
-// import {useLocation} from "react-router"
+import {useLocation} from "react-router"
+import Navbar from './Navbar'
 
 
 const Form = () => {
-  const [image, setImage] = useState([]);
+  // const [image, setImage] = useState([]);
   // console.log("🚀 ~ file: Form.jsx:6 ~ Form ~ image", image)
 
   // State for Upload file to Pinata 
-  const [formParams, updateFormParams] = useState({ firstName: '', lastName: '', location: '', city: '', state: '', zip: '', sex: '', age: '', tel: '', email: '' })
+  const [formParams, updateFormParams] = useState({idNum: '', firstName: '', lastName: '', location: '', city: '', state: '', zip: '', sex: '', age: '', tel: '', email: '' })
   const [fileURL, setFileURL] = useState(null)
   const ethers = require('ethers')
   const [message, updateMessage] = useState('')
-  // const location = useLocation();
+  const location = useLocation();
 
   // To preview image - Dropzone plugin
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: "image/",
-    onDrop: (acceptedFiles) => {
-      setImage(
-        acceptedFiles.map((uploadFile) =>
-          Object.assign(uploadFile, {
-            preview: URL.createObjectURL(uploadFile),
-          })
-        )
-      );
-    },
-  });
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   accept: "image/",
+  //   onDrop: (acceptedFiles) => {
+  //     setImage(
+  //       acceptedFiles.map((uploadFile) =>
+  //         Object.assign(uploadFile, {
+  //           preview: URL.createObjectURL(uploadFile),
+  //         })
+  //       )
+  //     );
+  //   },
+  // });
 
-  // Function for upload image to pinata 
-  async function OnChangeFile(e) {
-    var file = e.target.files[0]
-
-    try {
-      const response = await uploadFileToIPFS(file)
-      if(response.sucess === true) {
-        console.log("Upload image to Pinata:" ,response.pinataURL)
-        setFileURL(response.pinataURL)
+ 
+    //upload gambar ke ipfs
+    async function OnChangeFile(e) {
+      var file = e.target.files[0];
+      
+      try {
+          const response = await uploadFileToIPFS(file);
+          if(response.success === true) {
+              console.log("Uploaded image to Pinata: ", response.pinataURL)
+              setFileURL(response.pinataURL);
+          }
       }
-    } catch(e){
-      console.log("Error during file upload", e)
-    }
+      catch(e) {
+          console.log("Error during file upload", e);
+      }
   }
 
-  async function uploadMetaDataToIPFS() {
-    const {firstName, lastName, location, city, state, zip, sex, age, tel, email} = formParams
+  //function untuk upload metadata ke ipfs
+  async function uploadMetadataToIPFS() {
+      const {idNum, firstName, lastName, location, city, state, zip, sex, age, tel, email} = formParams;
+      // untuk pastikan semua data tidak kosong
+      if( !idNum || !firstName || !lastName || !location || !city || !state || !zip || !sex || !age || !tel || !email || !fileURL)
+          return;
 
-    if(!firstName || !lastName || !location || !city || !state || !zip || !sex || !age || !tel || !email || !fileURL) 
-    return
-
-    const idJSON ={ firstName, lastName, location, city, state, zip, sex, age, tel, email, image: fileURL }
-
-    try {
-      const response = await uploadJSONToIPFS(idJSON)
-      if(response.sucess === true){
-        console.log("Uploaded JSON to Pinata: ", response)
-        return response.pinataURL
+      const idJSON = {
+         idNum, firstName, lastName, location, city, state, zip, sex, age, tel, email, image: fileURL
       }
-    } catch(e) {
-      console.log("error uploading JSON metadata:", e)
-    }
-
-    } 
-
-    async function listID(e) {
-      e.preventDefault()
 
       try {
-        const metadataURL = await uploadMetaDataToIPFS()
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const signer = provider.getSigner()
-
-        updateMessage("Please wait ... uploading (upto 5mins")
-
-        let contract = new ethers.Contract(Id.address, Id.abi, signer)
-        
-        let transaction = await contract.createToken(metadataURL) // .createToken pun dari contract
-        await transaction.wait()
-
-        alert("Succesfully upload your Digital ID")
-        updateMessage("")
-        updateFormParams({firstName: '', lastName: '', location:'', city:'', state:'', zip:'', sex:'', age:'', tel:'', email: ''})
-        window.location.replace("/")
-
-      } catch(e) {
-        alert("Upload error: ",)
+          //upload the metadata JSON to IPFS
+          const response = await uploadJSONToIPFS(idJSON);
+          if(response.success === true){
+              console.log("Uploaded JSON to Pinata: ", response)
+              return response.pinataURL;
+          }
       }
-    }
+      catch(e) {
+          console.log("error uploading JSON metadata:", e)
+      }
+  }
+
+  async function listID(e) {
+      e.preventDefault();
+
+      //Upload data to IPFS
+      try {
+          const metadataURL = await uploadMetadataToIPFS();
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
+          updateMessage("Please wait.. uploading (up to 5 mins)")
+
   
+          let contract = new ethers.Contract(Id.address, Id.abi, signer)
+
+  
+          let transaction = await contract.setDetails(metadataURL)
+          await transaction.wait()
+
+          alert("Successfully upload your Id!");
+          updateMessage("");
+          updateFormParams({ idNum: '', firstName: '', lastName: '', location:'', city: '', state: '', zip: '', sex: '', age: '', tel: '', email: ''});
+          window.location.replace("/")
+      }
+      catch(e) {
+          alert( "Upload error"+e )
+      }
+  }
+
+  console.log("Working", process.env);
 
   return (
+    <div>
+      <Navbar></Navbar>
+    
     <section className="max-w-screen-lg mx-auto py-8">
       <div className="text-left ml-3">
         <h1 className="text-2xl font-semibold">Digital Identity</h1>
@@ -101,6 +114,19 @@ const Form = () => {
       </div>
       {/* First and Last name  */}
       <div className="mt-4 flex gap-0 sm:gap-3 gap-y-5 text-left">
+        <div className="md:w-1/2 px-3 ">
+          <label htmlFor="idNum" className="mb-1 font-semibold text-gray-500">
+            Id
+          </label>
+          <input
+            id="idNum"
+            type="text"
+            placeholder="1"
+            className="block w-full bg-gray-100 text-gray-700 border rounded py-3 px-4 mb-3 appearance-none "
+            value={formParams.idNum}
+            onChange={e => updateFormParams({...formParams, idNum: e.target.value})}
+          />
+        </div>
         <div className="md:w-1/2 px-3 ">
           <label htmlFor="firstName" className="mb-1 font-semibold text-gray-500">
             First Name
@@ -247,7 +273,7 @@ const Form = () => {
       </div>
 
       {/* Upload Image  */}
-      <div className="ml-3 mr-3 mt-3 text-left">
+      {/* <div className="ml-3 mr-3 mt-3 text-left">
         <label className="mb-1 font-semibold text-gray-500">
           Upload Your IC
         </label>
@@ -272,6 +298,9 @@ const Form = () => {
             );
           })}
         </div>
+      </div> */}
+      <div>           
+          <input type={"file"} onChange={OnChangeFile}></input>
       </div>
 
       {/* Save Button  */}
@@ -282,6 +311,7 @@ const Form = () => {
         </button>
       </div>
     </section>
+    </div>
   );
 };
 
